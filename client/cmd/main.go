@@ -11,6 +11,7 @@ func main() {
 	var wg sync.WaitGroup
 
 
+
 	// handle kill signal
 	termChan := make(chan os.Signal)
 	signal.Notify(termChan, syscall.SIGINT, syscall.SIGTERM)

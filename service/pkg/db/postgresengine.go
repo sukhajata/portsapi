@@ -75,6 +75,36 @@ func (t *PostgresEngine) Query(queryString string, arguments ...interface{}) ([]
 	return results, err
 }
 
+// QueryTextColumn - select a text column from one or more rows
+func (t *PostgresEngine) QueryTextColumn(queryString string, arguments ...interface{}) ([]string, error) {
+	conn, err := t.pool.Acquire(context.Background())
+	if err != nil {
+		return nil, &FatalError{message: err.Error()}
+	}
+
+	defer conn.Release()
+
+	rows, err := conn.Query(context.Background(), queryString, arguments...)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	result := make([]string, 0)
+	for rows.Next() {
+		var data string
+		err = rows.Scan(&data)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, data)
+	}
+
+	return result, nil
+}
+
 // Exec - run a query without return
 func (t *PostgresEngine) Exec(queryString string, arguments ...interface{}) error {
 	conn, err := t.pool.Acquire(context.Background())

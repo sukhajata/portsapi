@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package portdomainservice;
 
-option go_package = "github.com/sukhajata/portsapi/service/api/grpc";
+option go_package = "github.com/sukhajata/portsapi/service/pkg/proto";
 
 message Port {
     string name = 1;
