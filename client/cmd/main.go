@@ -1,16 +1,25 @@
 package cmd
 
 import (
+	"bufio"
+	"github.com/sukhajata/portsapi/client/internal/parser"
+	pb "github.com/sukhajata/portsapi/service/proto"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 )
 
+
 func main() {
 	var wg sync.WaitGroup
 
-
+	f, err := os.Open("ports.json")
+	if err != nil {
+		panic(err)
+	}
+	r := bufio.NewReader(f)
+	parser := parser.NewParser(r)
 
 	// handle kill signal
 	termChan := make(chan os.Signal)
