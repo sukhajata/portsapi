@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package portdomainservice;
+
+option go_package = "github.com/sukhajata/portsapi/service/api/grpc";
+
+message Port {
+    string name = 1;
+    string city = 2;
+    string province = 3;
+    string country = 4;
+    repeated string alias = 5;
+    repeated string regions = 6;
+    repeated float coordinates = 7;
+    string timezone = 8;
+    repeated string unlocs = 9;
+    string code = 10;
+}
+
+message Ports {
+    repeated Port ports = 1;
+}
+
+message GetPortsRequest {}
+
+message GetPortRequest {
+    string id = 1;
+}
+
+message UpsertPortRequest {
+    string id = 1;
+    Port port = 2;
+}
+
+service PortDomainService {
+
+    rpc GetPorts(GetPortsRequest) returns (Ports) {}
+
+    rpc GetPort(GetPortRequest) returns (Port) {}
+
+    rpc UpsertPort(UpsertPortRequest) returns (Port) {}
+
+}
