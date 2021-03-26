@@ -63,8 +63,22 @@ func (s *Service) GetPort(req *proto.GetPortRequest) (*proto.Port, error) {
 
 // UpsertPort - insert or update a port
 func (s *Service) UpsertPort(req *proto.UpsertPortRequest) (*proto.Port, error) {
-	sql := "INSERT INTO ports (id, data) VALUES($1, $2)"
-	err := s.dbEngine.Exec(sql, req.Id, req.Port)
+	sql := "SELECT 1 FROM ports WHERE id = $1"
+	rows, err := s.dbEngine.Query(sql, req.Id)
+	if err != nil {
+		return &proto.Port{}, err
+	}
+
+	if len(rows) == 0 {
+		// insert
+		sql = "INSERT INTO ports (id, data) VALUES($1, $2)"
+		err = s.dbEngine.Exec(sql, req.Id, req.Port)
+	} else {
+		// update
+		sql = "UPDATE ports SET data = $1 WHERE id = $2"
+		err = s.dbEngine.Exec(sql, req.Port, req.Id)
+	}
+
 	if err != nil {
 		return &proto.Port{}, err
 	}
