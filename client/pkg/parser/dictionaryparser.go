@@ -34,18 +34,15 @@ func NewDictionaryParser(reader *bufio.Reader) *DictionaryParser {
 
 func (p *DictionaryParser) Read(ctx context.Context) <-chan *DictionaryItem {
 	outChan := make(chan *DictionaryItem, 2)
+	//quitChan := make(chan int)
+	go func() {
+		// first line
+		_, err := p.reader.ReadString('\n')
+		if err != nil {
+			panic(err)
+		}
 
-	// first line
-	_, err := p.reader.ReadString('\n')
-	if err != nil {
-		panic(err)
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			close(outChan)
-		default:
+		for {
 			err = p.ReadItem(outChan)
 			if err != nil {
 				close(outChan)
@@ -56,9 +53,29 @@ func (p *DictionaryParser) Read(ctx context.Context) <-chan *DictionaryItem {
 				close(outChan)
 				break
 			}
-		}
 
-	}
+			// TODO - fix select with cancel
+			/*select {
+			case <-ctx.Done():
+				close(outChan)
+				return
+			case <-quitChan:
+				close(outChan)
+				return
+			default:
+				err = p.ReadItem(outChan)
+				if err != nil {
+					quitChan <- 1
+				}
+				// move to next item
+				_, err = p.reader.ReadString(',')
+				if err != nil {
+					quitChan <- 1
+				}
+			}*/
+
+		}
+	}()
 
 	return outChan
 }

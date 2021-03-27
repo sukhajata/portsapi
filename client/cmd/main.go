@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"github.com/sukhajata/portsapi/client/api"
 	"github.com/sukhajata/portsapi/client/internal/portdomain"
 	"github.com/sukhajata/portsapi/client/internal/processor"
 	"github.com/sukhajata/portsapi/client/pkg/parser"
@@ -53,6 +54,8 @@ func main() {
 		go portDomainService.SendPorts(portItemChan, &wg)
 	}
 
+	// http api
+	httpClient := api.NewHTTPServer(portDomainService)
 
 	// handle kill signal
 	termChan := make(chan os.Signal)
@@ -60,6 +63,7 @@ func main() {
 	<-termChan // Blocks here until either SIGINT or SIGTERM is received.
 
 	// graceful shutdown
+	httpClient.Ready = false
 	cancel()
 	wg.Wait()
 }

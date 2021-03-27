@@ -99,7 +99,7 @@ func NewHTTPServer(portDomainClient *portdomain.PortDomainClient) *HTTPServer {
 	server := &HTTPServer{
 		portDomainClient: portDomainClient,
 		Live:        true,
-		Ready:       false,
+		Ready:       true,
 	}
 
 	c := cors.New(cors.Options{
