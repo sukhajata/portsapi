@@ -22,7 +22,7 @@ func NewPortDomainClient(address string) (*PortDomainClient, *grpc.ClientConn, e
 		conn, err = grpc.Dial(address, grpc.WithInsecure())
 		if err != nil {
 			fmt.Println(err)
-			time.Sleep(time.Second * 1)
+			time.Sleep(time.Second * 3)
 			continue
 		}
 

@@ -33,6 +33,7 @@ COPY --from=builder /app/service .
 
 # Expose port to the outside world
 EXPOSE 80
+EXPOSE 5000
 
 # Command to run the executable
 CMD ["./service"]

@@ -16,17 +16,17 @@ services:
     depends_on:
       - "db"
     environment:
-      - adminURL=postgresql://postgres:pass@db/postgres?sslmode=require
-      - dbURL=postgresql://postgres:pass@db/shipping?sslmode=require
+      - adminURL=postgresql://postgres:pass@db/postgres
+      - dbURL=postgresql://postgres:pass@db/shipping
       - dbName=shipping
   portdomainservice:
     build:
       context: ./service
       dockerfile: Dockerfile
     depends_on:
-      - "db_init"
+      - "dbinit"
     environment:
-      - psqlURL=postgresql://postgres:pass@db/shipping?sslmode=require
+      - psqlURL=postgresql://postgres:pass@db/shipping
       - grpcPort=5000
   client:
     build:

@@ -30,6 +30,7 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/client .
+COPY *.json .
 
 # Expose port to the outside world
 EXPOSE 80
