@@ -9,10 +9,22 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=pass
+  dbinit:
+    build:
+      context: ./initdb
+      dockerfile: Dockerfile    
+    depends_on:
+      - "db"
+    environment:
+      - adminURL=postgresql://postgres:pass@db/postgres?sslmode=require
+      - dbURL=postgresql://postgres:pass@db/shipping?sslmode=require
+      - dbName=shipping
   portdomainservice:
     build:
       context: ./service
       dockerfile: Dockerfile
+    depends_on:
+      - "db_init"
     environment:
       - psqlURL=postgresql://postgres:pass@db/shipping?sslmode=require
       - grpcPort=5000
@@ -20,5 +32,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+    depends_on:
+      - "portdomainservice"
     environment:
       - portDomainServiceAddress=portdomainservice:5000

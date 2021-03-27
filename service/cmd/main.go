@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	grpcPort = os.Getenv("GRPCPort")
+	grpcPort = os.Getenv("grpcPort")
 	psqlURL  = os.Getenv("psqlURL")
 )
 
