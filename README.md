@@ -13,6 +13,10 @@ To run tests
 cd client
 go test ./...
 ```
+Benchmark and performance
+```sh
+go test ./... -bench=. -run=XX -benchmem
+```
 # Launch
 docker-compose up --build
 

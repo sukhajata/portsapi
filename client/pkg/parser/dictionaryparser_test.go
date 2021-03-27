@@ -133,3 +133,30 @@ func TestDictionaryParser_Read_Corrupt(t *testing.T) {
 	// assert
 	require.Equal(t, 1, count)
 }
+
+func BenchmarkDictionaryParser_Read(b *testing.B) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	sr := strings.NewReader(generateContent(10))
+	r := bufio.NewReader(sr)
+	dictionaryParser := parser.NewDictionaryParser(r)
+
+	for n := 0; n < b.N; n++ {
+		dictionaryParser.Read(ctx)
+	}
+
+	/*var channels []<-chan *parser.DictionaryItem
+	for n := 0; n < b.N; n++ {
+		outChan := dictionaryParser.Read(ctx)
+		channels = append(channels, outChan)
+	}
+
+	count := 0
+	for _, c := range channels {
+		for range c {
+			count++
+		}
+	}*/
+
+}

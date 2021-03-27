@@ -39,7 +39,8 @@ func (p *DictionaryParser) Read(ctx context.Context) <-chan *DictionaryItem {
 		// first line
 		_, err := p.reader.ReadString('\n')
 		if err != nil {
-			panic(err)
+			close(outChan)
+			return
 		}
 
 		for {
